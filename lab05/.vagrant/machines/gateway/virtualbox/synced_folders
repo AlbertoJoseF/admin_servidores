@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"C:/Users/Albert Joseph Eapen/Documents/Universidad/Sistemas Computacionales/6to/Laboratorio de Redes y Servidores/vms/lab5","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

@@ -1,0 +1,50 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.define "gateway" do |gateway|
+    gateway.vm.box = "centos/7"
+    gateway.vm.network "private_network", ip: "192.168.0.3"
+    gateway.vm.network "public_network", ip: "193.169.0.31"
+    gateway.vm.provision "shell", inline: <<-SHELL
+      echo "gateway" > /etc/hostname
+      hostname -b gateway
+      echo "192.168.1.2      apache" >> /etc/hosts
+      echo "192.168.0.4      postgresql" >> /etc/hosts
+      echo "192.168.0.5      client" >> /etc/hosts
+
+    SHELL
+  end
+  config.vm.define "apache" do |apache|
+    apache.vm.box = "centos/7"
+    apache.vm.network "private_network", ip: "192.168.1.2"
+    apache.vm.network "public_network", ip: "193.169.0.21"
+    apache.vm.provision "shell", inline: <<-SHELL
+      echo "apache" > /etc/hostname
+      hostname -b apache
+      echo "192.168.0.3      gateway" >> /etc/hosts
+      echo "192.168.0.4      postgresql" >> /etc/hosts
+    SHELL
+  end
+  config.vm.define "postgresql" do |postgresql|
+    postgresql.vm.box = "centos/7"
+    postgresql.vm.network "private_network", ip: "192.168.0.4"
+    postgresql.vm.network "public_network", ip: "193.169.0.41"
+    postgresql.vm.provision "shell", inline: <<-SHELL
+      echo "postgresql" > /etc/hostname
+      hostname -b postgresql
+      echo "192.168.0.2      apache" >> /etc/hosts
+      echo "192.168.0.3      gateway" >> /etc/hosts
+    SHELL
+  end
+  config.vm.define "client" do |client|
+    client.vm.box = "centos/7"
+    client.vm.network "private_network", ip: "192.168.0.5"
+    client.vm.network "public_network", ip: "193.169.0.51"
+    client.vm.provision "shell", inline: <<-SHELL
+      echo "postgresql" > /etc/hostname
+      hostname -b postgresql
+      echo "192.168.0.3      gateway" >> /etc/hosts
+    SHELL
+  end
+end
